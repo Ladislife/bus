@@ -12,7 +12,7 @@
     <button type="button" onclick="generateTicket()">Générer le ticket</button>
   </form>
 
-  <p id="output"></p>
+  <div id="output"></div>
 
   <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
 
@@ -45,15 +45,21 @@
     }
 
     function copyToClipboard() {
-      const textToCopy = document.getElementById('output').innerHTML.replace(/<br>/g, '\n');
-      const textarea = document.createElement('textarea');
-      textarea.value = textToCopy;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
+      const outputElement = document.getElementById('output');
+      const range = document.createRange();
+      range.selectNodeContents(outputElement);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
 
-      alert('Le texte a été copié dans le presse-papiers.');
+      try {
+        document.execCommand('copy');
+        alert('Le texte a été copié dans le presse-papiers.');
+      } catch (e) {
+        console.error('Impossible de copier le texte.', e);
+      }
+
+      selection.removeAllRanges();
     }
   </script>
 </body>
