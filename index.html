@@ -54,6 +54,7 @@
     }
 
     #output-container {
+      display: none;
       margin-top: 30px;
       white-space: pre-wrap;
       font-family: 'Courier New', monospace;
@@ -121,6 +122,9 @@
       document.getElementById('output').innerText = outputText;
       document.getElementById('output-container').classList.add('show');
       document.getElementById('copyButton').style.display = 'block';
+
+      // Cacher le formulaire après la génération du ticket
+      document.getElementById('bus-ticket-form').style.display = 'none';
     }
 
     function copyToClipboard() {
