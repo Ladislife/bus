@@ -12,7 +12,7 @@
     <button type="button" onclick="generateTicket()">Générer le ticket</button>
   </form>
 
-  <div id="output"></div>
+  <p id="output"></p>
 
   <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
 
@@ -45,7 +45,7 @@
     }
 
     function copyToClipboard() {
-      const textToCopy = document.getElementById('output').textContent;
+      const textToCopy = document.getElementById('output').innerHTML.replace(/<br>/g, '\n');
       const textarea = document.createElement('textarea');
       textarea.value = textToCopy;
       document.body.appendChild(textarea);
