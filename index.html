@@ -1,66 +1,144 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Formulaire de génération de ticket de bus </title>
+  <title>Formulaire de génération de ticket de bus RATP</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      margin: 20px;
+      color: #333;
+      background-color: #f7f7f7;
+    }
+
+    body.dark-mode {
+      color: #f1f1f1;
+      background-color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #bus-ticket-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #output-container {
+      display: none;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      border: 1px solid #ccc;
+      padding: 10px;
+      color: #333;
+      background-color: #fff;
+      border-radius: 3px;
+    }
+
+    #output-container.show {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <h1>Formulaire de génération de ticket de bus </h1>
+  <h1>Formulaire de génération de ticket de bus RATP</h1>
   <form id="bus-ticket-form">
     <label for="busNumber">Numéro du bus:</label>
-    <input type="text" id="busNumber" required><br>
+    <input type="text" id="busNumber" required>
 
     <button type="button" onclick="generateTicket()">Générer le ticket</button>
   </form>
 
-  <div id="output"></div>
-
-  <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
+  <div id="output-container">
+    <div id="output"></div>
+    <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
+  </div>
 
   <script>
     function generateTicket() {
       const busNumber = document.getElementById('busNumber').value;
 
-      const now = new Date(); // Obtenir la date et l'heure actuelles
-      const day = String(now.getDate()).padStart(2, '0'); // Jour sur 2 chiffres
-      const month = String(now.getMonth() + 1).padStart(2, '0'); // Mois sur 2 chiffres
-      const year = now.getFullYear(); // Année sur 4 chiffres
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
       const journeyDate = `${day}.${month}.${year}`;
 
-      const hours = String(now.getHours()).padStart(2, '0'); // Heures sur 2 chiffres
-      const minutes = String(now.getMinutes()).padStart(2, '0'); // Minutes sur 2 chiffres
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
       const startTime = `${hours}:${minutes}`;
 
-      // Calculer l'heure de fin du trajet en ajoutant une heure à l'heure de début
       const endTime = new Date(now.getTime() + 60 * 60 * 1000);
       const endHours = String(endTime.getHours()).padStart(2, '0');
       const endMinutes = String(endTime.getMinutes()).padStart(2, '0');
       const formattedEndTime = `${endHours}:${endMinutes}`;
 
-      const outputText = `RATP - Ticket SMS  bus ${busNumber}<br>2,50 euros TTC<br><br>1 trajet sans corresp.<br>le ${journeyDate} de ${startTime} à ${formattedEndTime}<br><br>A PRESENTER AU CONDUCTEUR<br><br>74'49'58'57'43'09`;
+      const outputText = `RATP - Ticket SMS  bus ${busNumber}\n2,50 euros TTC\n\n1 trajet sans corresp.\nle ${journeyDate} de ${startTime} à ${formattedEndTime}\n\nA PRESENTER AU CONDUCTEUR\n\n74'49'58'57'43'09`;
 
-      document.getElementById('output').innerHTML = outputText;
-
-      // Afficher le bouton de copie une fois que le texte est généré
+      document.getElementById('output').innerText = outputText;
+      document.getElementById('output-container').classList.add('show');
       document.getElementById('copyButton').style.display = 'block';
     }
 
     function copyToClipboard() {
-      const outputElement = document.getElementById('output');
-      const range = document.createRange();
-      range.selectNodeContents(outputElement);
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
+      const outputText = document.getElementById('output').innerText;
+      const textarea = document.createElement('textarea');
+      textarea.value = outputText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
 
-      try {
-        document.execCommand('copy');
-        alert('Le texte a été copié dans le presse-papiers.');
-      } catch (e) {
-        console.error('Impossible de copier le texte.', e);
-      }
-
-      selection.removeAllRanges();
+      alert('Le texte a été copié dans le presse-papiers.');
     }
+
+    function setDarkMode(darkMode) {
+      const body = document.body;
+      if (darkMode) {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+    }
+
+    // Détection automatique du mode sombre du système
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    setDarkMode(prefersDarkScheme.matches);
+
+    // Ajouter un écouteur d'événement pour détecter les changements du mode sombre
+    prefersDarkScheme.addListener((event) => {
+      setDarkMode(event.matches);
+    });
   </script>
 </body>
 </html>
