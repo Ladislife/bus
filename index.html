@@ -3,22 +3,23 @@
 <head>
   <title>Formulaire de génération de ticket de bus RATP</title>
   <style>
-    /* Le style CSS pour les écrans larges */
     body {
       font-family: 'Helvetica Neue', sans-serif;
-      margin: 20px;
+      margin: 0;
+      padding: 0;
       color: #333;
       background-color: #f7f7f7;
-      font-size: 16px;
+      font-size: 24px;
     }
 
     h1 {
       text-align: center;
+      margin-top: 30px;
       margin-bottom: 20px;
     }
 
     #bus-ticket-form {
-      max-width: 400px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 20px;
       background-color: #fff;
@@ -28,60 +29,57 @@
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 3px;
+      font-size: 24px;
     }
 
     button {
       display: block;
       width: 100%;
-      padding: 10px;
+      padding: 15px;
       background-color: #007bff;
       color: #fff;
       border: none;
       border-radius: 3px;
       cursor: pointer;
+      font-size: 24px;
     }
 
     #output-container {
-      display: none;
-      margin-top: 20px;
+      margin-top: 30px;
       white-space: pre-wrap;
       font-family: 'Courier New', monospace;
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 20px;
       color: #333;
       background-color: #fff;
-      border-radius: 3px;
+      border-radius: 5px;
+      font-size: 24px;
     }
 
     #output-container.show {
       display: block;
     }
 
-    /* Le style CSS pour les écrans de taille moyenne (tablette) */
-    @media (max-width: 1600px) {
-      body {
-        font-size: 18px;
-      }
-
-      #bus-ticket-form {
-        max-width: 100%;
-      }
-    }
-
-    /* Le style CSS pour les écrans de petite taille (mobiles) */
-    @media (max-width: 767px) {
-      body {
-        font-size: 20px;
-      }
+    #copyButton {
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 24px;
     }
   </style>
 </head>
