@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Formulaire de génération de ticket de bus RATP</title>
+</head>
+<body>
+  <h1>Formulaire de génération de ticket de bus RATP</h1>
+  <form id="bus-ticket-form">
+    <label for="busNumber">Numéro du bus:</label>
+    <input type="text" id="busNumber" required><br>
+
+    <button type="button" onclick="generateTicket()">Générer le ticket</button>
+  </form>
+
+  <div id="output"></div>
+
+  <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
+
+  <script>
+    function generateTicket() {
+      const busNumber = document.getElementById('busNumber').value;
+
+      const now = new Date(); // Obtenir la date et l'heure actuelles
+      const day = String(now.getDate()).padStart(2, '0'); // Jour sur 2 chiffres
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Mois sur 2 chiffres
+      const year = now.getFullYear(); // Année sur 4 chiffres
+      const journeyDate = `${day}.${month}.${year}`;
+
+      const hours = String(now.getHours()).padStart(2, '0'); // Heures sur 2 chiffres
+      const minutes = String(now.getMinutes()).padStart(2, '0'); // Minutes sur 2 chiffres
+      const startTime = `${hours}:${minutes}`;
+
+      // Calculer l'heure de fin du trajet en ajoutant une heure à l'heure de début
+      const endTime = new Date(now.getTime() + 60 * 60 * 1000);
+      const endHours = String(endTime.getHours()).padStart(2, '0');
+      const endMinutes = String(endTime.getMinutes()).padStart(2, '0');
+      const formattedEndTime = `${endHours}:${endMinutes}`;
+
+      const outputText = `RATP - Ticket SMS  bus ${busNumber}<br>2,50 euros TTC<br><br>1 trajet sans corresp.<br>le ${journeyDate} de ${startTime} à ${formattedEndTime}<br><br>A PRESENTER AU CONDUCTEUR<br><br>74'49'58'57'43'09`;
+
+      document.getElementById('output').innerHTML = outputText;
+
+      // Afficher le bouton de copie une fois que le texte est généré
+      document.getElementById('copyButton').style.display = 'block';
+    }
+
+    function copyToClipboard() {
+      const textToCopy = document.getElementById('output').textContent;
+      const textarea = document.createElement('textarea');
+      textarea.value = textToCopy;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      alert('Le texte a été copié dans le presse-papiers.');
+    }
+  </script>
+</body>
+</html>
