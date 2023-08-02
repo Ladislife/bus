@@ -8,11 +8,7 @@
       margin: 20px;
       color: #333;
       background-color: #f7f7f7;
-    }
-
-    body.dark-mode {
-      color: #f1f1f1;
-      background-color: #333;
+      font-size: 16px;
     }
 
     h1 {
@@ -68,6 +64,16 @@
     #output-container.show {
       display: block;
     }
+
+    @media (max-width: 767px) {
+      body {
+        font-size: 18px;
+      }
+
+      #bus-ticket-form {
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -121,24 +127,6 @@
 
       alert('Le texte a été copié dans le presse-papiers.');
     }
-
-    function setDarkMode(darkMode) {
-      const body = document.body;
-      if (darkMode) {
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-      }
-    }
-
-    // Détection automatique du mode sombre du système
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    setDarkMode(prefersDarkScheme.matches);
-
-    // Ajouter un écouteur d'événement pour détecter les changements du mode sombre
-    prefersDarkScheme.addListener((event) => {
-      setDarkMode(event.matches);
-    });
   </script>
 </body>
 </html>
