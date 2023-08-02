@@ -3,6 +3,7 @@
 <head>
   <title>Formulaire de génération de ticket de bus RATP</title>
   <style>
+    /* Le style CSS pour les écrans larges */
     body {
       font-family: 'Helvetica Neue', sans-serif;
       margin: 20px;
@@ -65,13 +66,21 @@
       display: block;
     }
 
-    @media (max-width: 767px) {
+    /* Le style CSS pour les écrans de taille moyenne (tablette) */
+    @media (max-width: 1600px) {
       body {
         font-size: 18px;
       }
 
       #bus-ticket-form {
         max-width: 100%;
+      }
+    }
+
+    /* Le style CSS pour les écrans de petite taille (mobiles) */
+    @media (max-width: 767px) {
+      body {
+        font-size: 20px;
       }
     }
   </style>
