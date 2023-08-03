@@ -1,143 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Formulaire de génération de ticket de bus</title>
-  <style>
-    body {
-      font-family: 'Helvetica Neue', sans-serif;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      background-color: #f7f7f7;
-      font-size: 24px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Ticket RATP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    h1 {
-      text-align: center;
-      margin-top: 30px;
-      margin-bottom: 20px;
-    }
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    #bus-ticket-form {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-    }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
+        form {
+            text-align: center;
+        }
 
-    input {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      font-size: 24px;
-    }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
 
-    button {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 24px;
-    }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    #output-container {
-      display: none;
-      margin-top: 30px;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
-      border: 1px solid #ccc;
-      padding: 20px;
-      color: #333;
-      background-color: #fff;
-      border-radius: 5px;
-      font-size: 24px;
-    }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
 
-    #output-container.show {
-      display: block;
-    }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
 
-    #copyButton {
-      margin-top: 20px;
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 24px;
-    }
-  </style>
+        #ticketResult {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
+            white-space: pre-line;
+        }
+
+        #copyButton {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+            margin-top: 20px;
+        }
+
+        #copyButtonContainer {
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Formulaire de génération de ticket de bus</h1>
-  <form id="bus-ticket-form">
-    <label for="busNumber">Numéro du bus:</label>
-    <input type="text" id="busNumber" required>
+    <div class="container">
+        <h1>Générateur de Ticket RATP</h1>
+        <form onsubmit="generateTicket(event)">
+            <label for="busNumber">Numéro du bus RATP :</label>
+            <input type="text" id="busNumber" required>
+            <br>
+            <button type="submit">Générer le ticket</button>
+        </form>
+        <p id="ticketResult"></p>
+        <div id="copyButtonContainer">
+            <button id="copyButton" onclick="copyToClipboard()">Copier le texte</button>
+        </div>
+    </div>
 
-    <button type="button" onclick="generateTicket()">Générer le ticket</button>
-  </form>
+    <script>
+        function generateTicket(event) {
+            event.preventDefault();
+            const busNumber = document.getElementById('busNumber').value;
+            const currentDate = new Date();
+            const formattedDate = formatDate(currentDate);
+            const formattedStartTime = formatTime(currentDate);
+            const expirationDate = new Date(currentDate.getTime() + 3600000); // 3600000 ms = 1 heure
+            const formattedEndTime = formatTime(expirationDate);
+            const randomNumbers = generateRandomNumbers(); // Générer les chiffres aléatoires
+            const ticketText = `RATP - Ticket SMS  bus ${busNumber}
+2.50 euros TTC
 
-  <div id="output-container">
-    <div id="output"></div>
-    <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copier le texte</button>
-  </div>
+1 trajet sans corresp.
+le ${formattedDate} de ${formattedStartTime} à ${formattedEndTime}
 
-  <script>
-    function generateTicket() {
-      const busNumber = document.getElementById('busNumber').value;
+A PRESENTER AU CONDUCTEUR
 
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = now.getFullYear();
-      const journeyDate = `${day}.${month}.${year}`;
+${randomNumbers}
 
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const startTime = `${hours}:${minutes}`;
+tab-sms.fr`;
 
-      const endTime = new Date(now.getTime() + 60 * 60 * 1000);
-      const endHours = String(endTime.getHours()).padStart(2, '0');
-      const endMinutes = String(endTime.getMinutes()).padStart(2, '0');
-      const formattedEndTime = `${endHours}:${endMinutes}`;
+            document.getElementById('ticketResult').innerText = ticketText;
+            document.getElementById('ticketResult').style.display = 'block';
+            document.getElementById('copyButton').style.display = 'block';
+        }
 
-      const outputText = `RATP - Ticket SMS  bus ${busNumber}\n2,50 euros TTC\n\n1 trajet sans corresp.\nle ${journeyDate} de ${startTime} à ${formattedEndTime}\n\nA PRESENTER AU CONDUCTEUR\n\n74'49'58'57'43'09`;
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(2);
+            return `${day}.${month}.${year}`;
+        }
 
-      document.getElementById('output').innerText = outputText;
-      document.getElementById('output-container').classList.add('show');
-      document.getElementById('copyButton').style.display = 'block';
+        function formatTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
 
-      // Cacher le formulaire après la génération du ticket
-      document.getElementById('bus-ticket-form').style.display = 'none';
-    }
+        function copyToClipboard() {
+            const ticketResult = document.getElementById('ticketResult');
+            const range = document.createRange();
+            range.selectNode(ticketResult);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Le texte a été copié dans le presse-papiers.');
+        }
 
-    function copyToClipboard() {
-      const outputText = document.getElementById('output').innerText;
-      const textarea = document.createElement('textarea');
-      textarea.value = outputText;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
+        function generateRandomNumbers() {
+            const digits = '0123456789';
+            let randomNumbers = '';
+            for (let i = 0; i < 10; i++) {
+                const randomNumber = digits.charAt(Math.floor(Math.random() * digits.length));
+                randomNumbers += randomNumber;
+            }
 
-      alert('Bon Voyage Gratuit 🚌💵🏃 ');
-    }
-  </script>
+            return `${randomNumbers.slice(0, 2)}'${randomNumbers.slice(2, 4)}'${randomNumbers.slice(4, 6)}'${randomNumbers.slice(6, 8)}'${randomNumbers.slice(8, 10)}`;
+        }
+    </script>
 </body>
+
 </html>
