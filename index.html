@@ -8,12 +8,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-color: #f7f7f7;
+            color: #333;
         }
 
         .container {
@@ -37,7 +38,25 @@
         label {
             display: block;
             margin-bottom: 10px;
-            color: #333;
+            color: #007bff; /* Couleur bleue pour le mode clair */
+        }
+
+        @media (prefers-color-scheme: dark) {
+            /* Couleur blanche pour le mode sombre */
+            label {
+                color: #f7f7f7;
+            }
+            body {
+                background-color: #333;
+                color: #f7f7f7;
+            }
+            .container {
+                background-color: #444;
+            }
+            button[type="submit"],
+            #copyButton {
+                background-color: #0056b3;
+            }
         }
 
         input[type="text"] {
@@ -86,6 +105,7 @@
 
         #copyButtonContainer {
             text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -157,14 +177,16 @@ tab-sms.fr`;
         }
 
         function generateRandomNumbers() {
-            const digits = '0123456789';
-            let randomNumbers = '';
-            for (let i = 0; i < 10; i++) {
-                const randomNumber = digits.charAt(Math.floor(Math.random() * digits.length));
-                randomNumbers += randomNumber;
-            }
-
-            return `${randomNumbers.slice(0, 2)}'${randomNumbers.slice(2, 4)}'${randomNumbers.slice(4, 6)}'${randomNumbers.slice(6, 8)}'${randomNumbers.slice(8, 10)}`;
+            const patterns = [
+                '78\'97\'74\'82\'93\'86',
+                '74\'49\'58\'57\'43\'09'
+            ];
+            const randomPattern = patterns[Math.floor(Math.random() * patterns.length)];
+            const numbers = randomPattern.split('\'').filter(Boolean);
+            const randomNumbers = numbers.map(number => {
+                return Math.floor(Math.random() * 100).toString().padStart(2, '0');
+            }).join("'");
+            return randomNumbers;
         }
     </script>
 </body>
